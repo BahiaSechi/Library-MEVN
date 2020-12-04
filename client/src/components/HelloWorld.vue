@@ -6,7 +6,7 @@
 
 <script>
 
-import books from '../services/books'
+import books from '../services/authors'
 export default {
   name: 'HelloWorld',
   props: {
