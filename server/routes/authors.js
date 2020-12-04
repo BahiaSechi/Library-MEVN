@@ -6,8 +6,8 @@ const authorsProcess = require('../process/authors');
 /* GET authors listing.*/
 router.get('/', (req, res) => {
     authorsProcess.getAll()
-        .then(ret => res.status(201).send(ret))
-        .catch(err => res.status(400).send({ message: err.message }));
+        .then(response => res.status(response.status).send(response.data))
+        .catch(err => res.status(err.response.status).send({ message: err.message }));
 });
 
 /* GET an author by id.*/
