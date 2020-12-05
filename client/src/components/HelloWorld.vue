@@ -14,7 +14,7 @@ export default {
   },
   data() {
     return {
-      apiResponse: null
+      apiResponse: null,
     }
   },
   mounted() {

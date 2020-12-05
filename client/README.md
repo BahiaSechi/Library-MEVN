@@ -1,4 +1,4 @@
-# library-node-express
+# vue-2
 
 ## Project setup
 ```
