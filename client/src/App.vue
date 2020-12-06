@@ -5,28 +5,26 @@
     <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="sidebar-heading">Gestion de bibliothèque </div>
       <div class="list-group list-group-flush">
-        <router-link  class="list-group-item list-group-item-action bg-light" :to="'contact'">Accueil</router-link>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Editeurs</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Auteurs</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Utilisateurs</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Emprunts</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Déconnexion</a>
+        <router-link  class="list-group-item list-group-item-action bg-light" :to="'books'">Livres</router-link>
+        <router-link  class="list-group-item list-group-item-action bg-light" :to="'authors'">Auteurs</router-link>
+        <router-link  class="list-group-item list-group-item-action bg-light" :to="'publishers'">Editeurs</router-link>
+        <router-link  class="list-group-item list-group-item-action bg-light" :to="'borrowings'">Emprunts</router-link>
+        <router-link  class="list-group-item list-group-item-action bg-light" :to="'users'">Utilisateurs</router-link>
+        <router-link  class="list-group-item list-group-item-action bg-light" :to="'logout'">Déconnexion</router-link>
       </div>
     </div>
     <div id="page-content-wrapper">
-      <img alt="Vue logo" src="./assets/logo.png">
-      <HelloWorld msg="Welcome to Your Vue.js App"/>
+      <img alt="ENSICAEN logo" style="max-width: 200px" src="./assets/ensi.jpg">
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 require('@/assets/css/style.css')
 export default {
   name: 'App',
   components: {
-    HelloWorld
   }
 }
 </script>

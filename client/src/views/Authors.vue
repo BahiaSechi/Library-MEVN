@@ -1,6 +1,9 @@
 <template>
   <div>
-    {{apiResponse}}
+    <h2>LISTE DES AUTEURS</h2>
+    <div>
+      <b-table id="table" striped hover :items="apiResponse" :fields="author_fields"></b-table>
+    </div>
   </div>
 </template>
 
@@ -8,12 +11,13 @@
 
 import books from '../services/authors'
 export default {
-  name: 'HelloWorld',
+  name: 'Authors',
   props: {
     msg: String
   },
   data() {
     return {
+      author_fields: ['name'],
       apiResponse: null,
     }
   },
@@ -30,6 +34,11 @@ export default {
 h3 {
   margin: 40px 0 0;
 }
+
+#table {
+  margin-top: 50px;
+}
+
 ul {
   list-style-type: none;
   padding: 0;
