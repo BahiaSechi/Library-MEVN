@@ -9,18 +9,15 @@ router.get('/', function(req, res) {
         .catch(err => res.status(err.response.status).send({ message: err.message }));
 });
 
-/* GET a publisher by id.*/
-router.get('/:id', function(req, res) {
-    res.send('respond with a resource');
-});
-
 /* Create a new publisher. */
-router.post('/', function(req, res, next) {
-    res.send('respond with a resource');
+router.post('/', function(req, res) {
+    publishersProcess.add(req.body)
+        .then(response => res.status(response.status).send(response.data))
+        .catch(err => res.status(err.response.status).send({message: err.message}));
 });
 
 /* DELETE a publisher by id.*/
-router.delete('/:id', function (req,res,next) {
+router.delete('/:id', function (req,res) {
     res.send('respond with a resource');
 });
 

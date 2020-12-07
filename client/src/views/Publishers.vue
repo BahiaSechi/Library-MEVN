@@ -5,8 +5,8 @@
       <b-table id="table" striped hover :items="apiResponse" :fields="publishers_fields">
       </b-table>
       <b-form inline>
-        <b-form-input :placeholder="'Hachette'" :type="'text'"></b-form-input>
-        <b-button variant="outline-primary">Ajouter un éditeur</b-button>
+        <b-form-input v-model="newPublisher.name" :placeholder="'Hachette'" :type="'text'"></b-form-input>
+        <b-button variant="outline-primary" v-on:click="addPublisher()">Ajouter un éditeur</b-button>
         <b-button variant="outline-primary">Supprimer</b-button>
       </b-form>
     </div>
@@ -19,14 +19,22 @@
 import publishers from '../services/publishers'
 
 export default {
-  name: "Publishers",
+  name: 'Publishers',
   props: {
     msg: String
   },
   data() {
     return {
       publishers_fields: ['name'],
+      newPublisher: {name:""},
       apiResponse: null
+    }
+  },
+  methods: {
+    addPublisher(){
+      publishers.add(this.newPublisher).then(() => {
+        this.$toasted.show("Editeur bien ajouté.", {type:"success"})
+      });
     }
   },
   mounted() {
