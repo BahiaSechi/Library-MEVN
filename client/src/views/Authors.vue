@@ -2,7 +2,7 @@
   <div>
     <h2>LISTE DES AUTEURS</h2>
     <div style="margin-top: 50px">
-      <b-table :items="apiResponse" :fields="author_fields" striped responsive="sm">
+      <b-table :items="apiResponse" :fields="author_fields" striped hover>
         <template #cell(actions)="row">
           <b-button variant="danger" size="sm" @click="deleteAuthor(row.item.id)" class="mr-2">
             <b-icon icon="trash-fill" aria-hidden="true"></b-icon>
@@ -13,7 +13,7 @@
     <div style="margin-top: 50px;">
       <b-form style="display: contents" inline>
         <b-form-input style="margin: 20px" v-model="newAuthor.name" :placeholder="'Simone de Beauvoir'" :type="'text'"></b-form-input>
-        <b-button variant="outline-primary" v-on:click="addAuthor()">Ajouter un auteur</b-button>
+        <b-button variant="outline-primary" @click="addAuthor()">Ajouter un auteur</b-button>
       </b-form>
     </div>
   </div>
