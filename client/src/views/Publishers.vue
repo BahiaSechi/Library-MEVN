@@ -7,7 +7,7 @@
       <b-form inline>
         <b-form-input v-model="newPublisher.name" :placeholder="'Hachette'" :type="'text'"></b-form-input>
         <b-button variant="outline-primary" v-on:click="addPublisher()">Ajouter un éditeur</b-button>
-        <b-button variant="outline-primary">Supprimer</b-button>
+        <b-button variant="outline-primary" v-on:click="deletePublisher()">Supprimer</b-button>
       </b-form>
     </div>
   </div>
@@ -35,12 +35,18 @@ export default {
       publishers.add(this.newPublisher).then(() => {
         this.$toasted.show("Editeur bien ajouté.", {type:"success"})
       });
+    },
+    deletePublisher(){
+      //TODO Changer le 5 en vrai id
+      publishers.remove(5).then(() => {
+        this.$toasted.show("Editeur bien supprimé.", {type:"success"})
+      });
     }
   },
   mounted() {
     publishers.getAll().then(response => {
       this.apiResponse = response.data
-    })
+    });
   }
 }
 </script>

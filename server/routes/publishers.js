@@ -18,7 +18,9 @@ router.post('/', function(req, res) {
 
 /* DELETE a publisher by id.*/
 router.delete('/:id', function (req,res) {
-    res.send('respond with a resource');
+    publishersProcess.remove(req.params.id)
+        .then(response => res.status(response.status).send(response.data))
+        .catch(err => res.status(err.response.status).send({message: err.message}));
 });
 
 module.exports = router;

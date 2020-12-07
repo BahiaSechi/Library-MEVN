@@ -7,6 +7,10 @@ export default {
 
     add(newPublisher) {
         return api().post('publishers', newPublisher)
+    },
+
+    remove(id) {
+        return api().delete(`publishers/${id}`);
     }
 
 }
