@@ -1,13 +1,16 @@
 let express = require('express');
 let router = express.Router();
+const publishersProcess = require('../process/publishers')
 
 /* GET publishers listing.*/
-router.get('/', function(req, res, next) {
-    res.send('respond with a resource');
+router.get('/', function(req, res) {
+    publishersProcess.getAll()
+        .then(response => res.status(response.status).send(response.data))
+        .catch(err => res.status(err.response.status).send({ message: err.message }));
 });
 
 /* GET a publisher by id.*/
-router.get('/:id', function(req, res, next) {
+router.get('/:id', function(req, res) {
     res.send('respond with a resource');
 });
 
