@@ -3,13 +3,17 @@
     <h2>LISTE DES AUTEURS</h2>
     <div>
       <b-table id="table" striped hover :items="apiResponse" :fields="author_fields"></b-table>
+      <b-form inline>
+        <b-form-input v-model="newAuthor.name" :placeholder="'Simone de Beauvoir'" :type="'text'"></b-form-input>
+        <b-button variant="outline-primary" v-on:click="addAuthor()">Ajouter un auteur</b-button>
+      </b-form>
     </div>
   </div>
 </template>
-
 <script>
 
 import authors from '../services/authors'
+
 export default {
   name: 'Authors',
   props: {
@@ -18,13 +22,23 @@ export default {
   data() {
     return {
       author_fields: ['name'],
+      newAuthor: {name:""},
       apiResponse: null,
+    }
+  },
+
+  methods: {
+    addAuthor(){
+      console.log(this.newAuthor)
+      authors.add(this.newAuthor).then(() => {
+        this.$toasted.show("Auteur bien ajouté.", {type:"success"})
+      });
     }
   },
   mounted() {
     authors.getAll().then(response => {
       this.apiResponse = response.data
-    })
+    });
   }
 }
 </script>

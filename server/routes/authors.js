@@ -17,7 +17,9 @@ router.get('/:id', function(req, res, next) {
 
 /* Create a new author. */
 router.post('/', function(req, res, next) {
-    res.send('respond with a resource');
+    authorsProcess.add(req.body)
+        .then(response => res.status(response.status).send(response.data))
+        .catch(err => res.status(err.response.status).send({message: err.message}));
 });
 
 /* DELETE an author by id.*/
