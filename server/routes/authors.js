@@ -10,21 +10,18 @@ router.get('/', (req, res) => {
         .catch(err => res.status(err.response.status).send({ message: err.message }));
 });
 
-/* GET an author by id.*/
-router.get('/:id', function(req, res, next) {
-    res.send('respond with a resource');
-});
-
 /* Create a new author. */
-router.post('/', function(req, res, next) {
+router.post('/', function(req, res) {
     authorsProcess.add(req.body)
         .then(response => res.status(response.status).send(response.data))
         .catch(err => res.status(err.response.status).send({message: err.message}));
 });
 
 /* DELETE an author by id.*/
-router.delete('/:id', function (req,res,next) {
-    res.send('respond with a resource');
+router.delete('/:id', function (req,res) {
+    authorsProcess.remove(req.params.id)
+        .then(response => res.status(response.status).send(response.data))
+        .catch(err => res.status(err.response.status).send({message: err.message}));
 });
 
 module.exports = router;

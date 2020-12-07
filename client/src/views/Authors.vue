@@ -2,10 +2,12 @@
   <div>
     <h2>LISTE DES AUTEURS</h2>
     <div>
-      <b-table id="table" striped hover :items="apiResponse" :fields="author_fields"></b-table>
+      <b-table id="table" striped hover :items="apiResponse" :fields="author_fields">
+      </b-table>
       <b-form inline>
         <b-form-input v-model="newAuthor.name" :placeholder="'Simone de Beauvoir'" :type="'text'"></b-form-input>
         <b-button variant="outline-primary" v-on:click="addAuthor()">Ajouter un auteur</b-button>
+        <b-button variant="outline-primary" v-on:click="deleteAuthor()">Supprimer</b-button>
       </b-form>
     </div>
   </div>
@@ -21,7 +23,7 @@ export default {
   },
   data() {
     return {
-      author_fields: ['name'],
+      author_fields: ['id','name'],
       newAuthor: {name:""},
       apiResponse: null,
     }
@@ -29,9 +31,14 @@ export default {
 
   methods: {
     addAuthor(){
-      console.log(this.newAuthor)
       authors.add(this.newAuthor).then(() => {
         this.$toasted.show("Auteur bien ajouté.", {type:"success"})
+      });
+    },
+    deleteAuthor(){
+      //TODO Changer le 5 en vrai id
+      authors.remove(5).then(() => {
+        this.$toasted.show("Auteur bien supprimé.", {type:"success"})
       });
     }
   },

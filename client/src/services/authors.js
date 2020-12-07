@@ -7,5 +7,9 @@ export default {
 
     add(newAuthor) {
         return api().post('authors', newAuthor)
+    },
+
+    remove(id) {
+        return api().delete(`authors/${id}`);
     }
 }
