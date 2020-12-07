@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-      author_fields: ['id','name'],
+      author_fields: ['name'],
       newAuthor: {name:""},
       apiResponse: null,
     }
