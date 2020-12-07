@@ -9,7 +9,7 @@
 
 <script>
 
-import books from '../services/authors'
+import authors from '../services/authors'
 export default {
   name: 'Authors',
   props: {
@@ -22,7 +22,7 @@ export default {
     }
   },
   mounted() {
-    books.getAll().then(response => {
+    authors.getAll().then(response => {
       this.apiResponse = response.data
     })
   }
