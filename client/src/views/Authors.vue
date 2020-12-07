@@ -1,13 +1,19 @@
 <template>
   <div>
     <h2>LISTE DES AUTEURS</h2>
-    <div>
-      <b-table id="table" striped hover :items="apiResponse" :fields="author_fields">
+    <div style="margin-top: 50px">
+      <b-table :items="apiResponse" :fields="author_fields" striped hover>
+        <template #cell(actions)="row">
+          <b-button variant="danger" size="sm" @click="deleteAuthor(row.item.id)" class="mr-2">
+            <b-icon icon="trash-fill" aria-hidden="true"></b-icon>
+          </b-button>
+        </template>
       </b-table>
-      <b-form inline>
-        <b-form-input v-model="newAuthor.name" :placeholder="'Simone de Beauvoir'" :type="'text'"></b-form-input>
-        <b-button variant="outline-primary" v-on:click="addAuthor()">Ajouter un auteur</b-button>
-        <b-button variant="outline-primary" v-on:click="deleteAuthor()">Supprimer</b-button>
+    </div>
+    <div style="margin-top: 50px;">
+      <b-form style="display: contents" inline>
+        <b-form-input style="margin: 20px" v-model="newAuthor.name" :placeholder="'Simone de Beauvoir'" :type="'text'"></b-form-input>
+        <b-button variant="outline-primary" @click="addAuthor()">Ajouter un auteur</b-button>
       </b-form>
     </div>
   </div>
@@ -18,34 +24,45 @@ import authors from '../services/authors'
 
 export default {
   name: 'Authors',
-  props: {
-    msg: String
-  },
   data() {
     return {
-      author_fields: ['name'],
+      author_fields: ['name', 'actions'],
       newAuthor: {name:""},
       apiResponse: null,
     }
   },
 
   methods: {
-    addAuthor(){
-      authors.add(this.newAuthor).then(() => {
-        this.$toasted.show("Auteur bien ajouté.", {type:"success"})
+    getAllAuthors() {
+      authors.getAll().then(response => {
+        this.apiResponse = response.data
       });
     },
-    deleteAuthor(){
-      //TODO Changer le 5 en vrai id
-      authors.remove(5).then(() => {
-        this.$toasted.show("Auteur bien supprimé.", {type:"success"})
+    addAuthor(){
+      authors.add(this.newAuthor).then(() => {
+        this.$notify({
+          group:'actions',
+          text: '<b>Auteur bien ajouté !</b>',
+          type: 'success',
+          position: 'bottom center'
+        });
+        this.getAllAuthors()
+      });
+    },
+    deleteAuthor(authorId){
+      authors.remove(authorId).then(() => {
+        this.$notify({
+          group:'actions',
+          text: '<b>Auteur bien supprimé !</b>',
+          type: 'success',
+          position: 'bottom center'
+        });
+        this.getAllAuthors()
       });
     }
   },
   mounted() {
-    authors.getAll().then(response => {
-      this.apiResponse = response.data
-    });
+    this.getAllAuthors()
   }
 }
 </script>
@@ -54,10 +71,6 @@ export default {
 <style scoped>
 h3 {
   margin: 40px 0 0;
-}
-
-#table {
-  margin-top: 50px;
 }
 
 ul {
