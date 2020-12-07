@@ -1,13 +1,19 @@
 <template>
   <div>
     <h2>LISTE DES EDITEURS</h2>
-    <div>
-      <b-table id="table" striped hover :items="apiResponse" :fields="publishers_fields">
+    <div style="margin-top: 50px">
+      <b-table :items="apiResponse" :fields="publishers_fields" striped hover>
+        <template #cell(actions)="row">
+          <b-button variant="danger" size="sm" @click="deletePublisher(row.item.id)" class="mr-2">
+            <b-icon icon="trash-fill" aria-hidden="true"></b-icon>
+          </b-button>
+        </template>
       </b-table>
-      <b-form inline>
-        <b-form-input v-model="newPublisher.name" :placeholder="'Hachette'" :type="'text'"></b-form-input>
-        <b-button variant="outline-primary" v-on:click="addPublisher()">Ajouter un éditeur</b-button>
-        <b-button variant="outline-primary" v-on:click="deletePublisher()">Supprimer</b-button>
+    </div>
+    <div style="margin-top: 50px;">
+      <b-form style="display: contents" inline>
+        <b-form-input style="margin: 20px" v-model="newPublisher.name" :placeholder="'Hachette'" :type="'text'"></b-form-input>
+        <b-button variant="outline-primary" @click="addPublisher()">Ajouter un éditeur</b-button>
       </b-form>
     </div>
   </div>
@@ -25,28 +31,42 @@ export default {
   },
   data() {
     return {
-      publishers_fields: ['name'],
+      publishers_fields: ['name', 'actions'],
       newPublisher: {name:""},
       apiResponse: null
     }
   },
   methods: {
-    addPublisher(){
-      publishers.add(this.newPublisher).then(() => {
-        this.$toasted.show("Editeur bien ajouté.", {type:"success"})
+    getAllPublishers() {
+      publishers.getAll().then(response => {
+        this.apiResponse = response.data
       });
     },
-    deletePublisher(){
-      //TODO Changer le 5 en vrai id
-      publishers.remove(5).then(() => {
-        this.$toasted.show("Editeur bien supprimé.", {type:"success"})
+    addPublisher(){
+      publishers.add(this.newPublisher).then(() => {
+        this.$notify({
+          group:'actions',
+          text: '<b>Editeur bien ajouté !</b>',
+          type: 'success',
+          position: 'bottom center'
+        });
+        this.getAllPublishers();
+      });
+    },
+    deletePublisher(publisherId){
+      publishers.remove(publisherId).then(() => {
+        this.$notify({
+          group:'actions',
+          text: '<b>Editeur bien supprimé !</b>',
+          type: 'success',
+          position: 'bottom center'
+        });
+        this.getAllPublishers();
       });
     }
   },
   mounted() {
-    publishers.getAll().then(response => {
-      this.apiResponse = response.data
-    });
+    this.getAllPublishers();
   }
 }
 </script>
@@ -54,10 +74,6 @@ export default {
 <style scoped>
 h3 {
   margin: 40px 0 0;
-}
-
-#table {
-  margin-top: 50px;
 }
 
 ul {
