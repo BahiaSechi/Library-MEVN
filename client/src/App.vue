@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex" id="wrapper">
-
+    <notifications position="bottom center" group="actions" />
     <!-- Sidebar -->
     <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="sidebar-heading">Gestion de bibliothèque </div>
