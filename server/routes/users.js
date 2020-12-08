@@ -11,7 +11,6 @@ router.get('/',(req, res) => {
       return ret;
     })
     .then((retWithoutPwd) => {
-      console.log(retWithoutPwd)
       res.send(retWithoutPwd)
     })
 });
