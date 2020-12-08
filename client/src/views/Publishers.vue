@@ -26,9 +26,6 @@ import publishers from '../services/publishers'
 
 export default {
   name: 'Publishers',
-  props: {
-    msg: String
-  },
   data() {
     return {
       publishers_fields: ['name', 'actions'],
@@ -43,15 +40,24 @@ export default {
       });
     },
     addPublisher(){
-      publishers.add(this.newPublisher).then(() => {
+      if(this.newPublisher.name === '') {
         this.$notify({
           group:'actions',
-          text: '<b>Editeur bien ajouté !</b>',
-          type: 'success',
+          text: `<b>Il faut renseigner au moins un nom d'éditeur. </b>`,
+          type: 'error',
           position: 'bottom center'
         });
-        this.getAllPublishers();
-      });
+      } else {
+        publishers.add(this.newPublisher).then(() => {
+          this.$notify({
+            group:'actions',
+            text: '<b>Editeur bien ajouté !</b>',
+            type: 'success',
+            position: 'bottom center'
+          });
+          this.getAllPublishers();
+        });
+      }
     },
     deletePublisher(publisherId){
       publishers.remove(publisherId).then(() => {

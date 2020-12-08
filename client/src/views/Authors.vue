@@ -39,15 +39,24 @@ export default {
       });
     },
     addAuthor(){
-      authors.add(this.newAuthor).then(() => {
+      if(this.newAuthor.name === '') {
         this.$notify({
           group:'actions',
-          text: '<b>Auteur bien ajouté !</b>',
-          type: 'success',
+          text: `<b>Il faut renseigner au moins un nom d'auteur. </b>`,
+          type: 'error',
           position: 'bottom center'
         });
-        this.getAllAuthors()
-      });
+      } else {
+        authors.add(this.newAuthor).then(() => {
+          this.$notify({
+            group: 'actions',
+            text: '<b>Auteur bien ajouté !</b>',
+            type: 'success',
+            position: 'bottom center'
+          });
+          this.getAllAuthors()
+        });
+      }
     },
     deleteAuthor(authorId){
       authors.remove(authorId).then(() => {

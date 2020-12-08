@@ -1,6 +1,8 @@
 import VueRouter from "vue-router";
 import Authors from "@/views/Authors";
 import Publishers from "@/views/Publishers";
+import Users from "@/views/Users";
+import Books from "@/views/Books";
 
 export default () => {
     const router = new VueRouter({
@@ -9,8 +11,8 @@ export default () => {
         routes: [
             {path: '/authors', component: Authors},
             {path: '/publishers', component: Publishers},
-            {path: '/about', component: Authors},
-            {path: '/contact', component: Authors}
+            {path: '/users', component: Users},
+            {path: '/books', component: Books}
         ]
     });
     return router;
