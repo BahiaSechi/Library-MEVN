@@ -1,4 +1,5 @@
 let createError = require('http-errors');
+const bodyParser = require('body-parser');
 let express = require('express');
 let path = require('path');
 let cookieParser = require('cookie-parser');
@@ -10,8 +11,6 @@ let usersRouter = require('./routes/users');
 let booksRouter = require('./routes/books');
 let authorsRouter = require('./routes/authors');
 let publishersRouter = require('./routes/publishers');
-let loginRouter = require('./routes/login');
-let registerRouter = require('./routes/register')
 
 let app = express();
 
@@ -26,14 +25,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/books', booksRouter);
 app.use('/authors', authorsRouter);
 app.use('/publishers', publishersRouter);
-app.use('/login', loginRouter);
-app.use('/register', registerRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
