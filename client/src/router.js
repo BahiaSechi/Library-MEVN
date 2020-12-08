@@ -3,6 +3,8 @@ import Authors from "@/views/Authors";
 import Publishers from "@/views/Publishers";
 import Users from "@/views/Users";
 import Books from "@/views/Books";
+import Register from "@/views/Register";
+import Login from "@/views/Login";
 
 export default () => {
     const router = new VueRouter({
@@ -11,6 +13,8 @@ export default () => {
         routes: [
             {path: '/authors', component: Authors},
             {path: '/publishers', component: Publishers},
+            {path:'/login', component: Login},
+            {path:'/register', component: Register},
             {path: '/users', component: Users},
             {path: '/books', component: Books}
         ]
