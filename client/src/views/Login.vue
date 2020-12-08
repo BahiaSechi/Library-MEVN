@@ -1,27 +1,26 @@
 <template>
   <div>
-    <h2>LOGIN</h2>
-    <b-form>
-      <b-form-group id="username_add" label="Username:" label-for="username">
+    <h2>CONNEXION</h2>
+
+    <div style="margin-top: 50px;">
+      <b-form style="display: contents" inline>
         <b-form-input
+            style="margin: 20px"
             id="username"
             type="text"
             required
             placeholder="Username"
         ></b-form-input>
-      </b-form-group>
-
-      <b-form-group id="password_add" label="Password:" label-for="password">
         <b-form-input
-            id="password"
-            required
-            placeholder="Password"
-            type="password"
-        ></b-form-input>
-      </b-form-group>
-
-      <b-button type="submit" variant="primary">Login</b-button>
-    </b-form>
+          style="margin: 20px"
+          id="password"
+          required
+          placeholder="Password"
+          type="password"
+      ></b-form-input>
+      </b-form>
+    </div>
+    <b-button type="submit" variant="primary">Se connecter</b-button>
   </div>
 
 </template>

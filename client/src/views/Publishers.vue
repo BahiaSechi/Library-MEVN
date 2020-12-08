@@ -55,6 +55,7 @@ export default {
             type: 'success',
             position: 'bottom center'
           });
+          this.newPublisher.name = '';
           this.getAllPublishers();
         });
       }

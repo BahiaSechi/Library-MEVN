@@ -54,6 +54,7 @@ export default {
             type: 'success',
             position: 'bottom center'
           });
+          this.newAuthor.name = '';
           this.getAllAuthors()
         });
       }
