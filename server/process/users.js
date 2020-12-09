@@ -23,7 +23,7 @@ const login = function (creds) {
         .then(() => {
             if(user[0] && user[0].username) {
                 if(user[0].password === creds.password) {
-                    const accessToken = jwt.sign({username: user.username, role: user.role}, accessTokenSecret);
+                    const accessToken = jwt.sign({username: user[0].username, role: user[0].role}, accessTokenSecret);
                     resolve(accessToken);
                 } else {
                     reject('Bad credentials.');

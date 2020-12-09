@@ -7,7 +7,7 @@ const accessTokenSecret = "web-services-secret"
 const authenticateJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
-    if (authHeader) {
+    if (authHeader && authHeader.split(' ')[0] === "Bearer") {
         const token = authHeader.split(' ')[1];
 
         jwt.verify(token, accessTokenSecret, (err, user) => {
@@ -24,15 +24,19 @@ const authenticateJWT = (req, res, next) => {
 }
 
 /* GET users listing. */
-router.get('/',(req, res) => {
-  usersProcess.list()
-    .then((ret) => {
-      ret.forEach(user => delete user.password);
-      return ret;
-    })
-    .then((retWithoutPwd) => {
-      res.send(retWithoutPwd)
-    })
+router.get('/', authenticateJWT,(req, res) => {
+  if(req['user'].role !== 'CONSULT_ROLE'){
+      usersProcess.list()
+      .then((ret) => {
+          ret.forEach(user => delete user.password);
+          return ret;
+      })
+      .then((retWithoutPwd) => {
+          res.send(retWithoutPwd)
+      })
+  } else {
+      res.status(401).send("Unauthorized");
+  }
 });
 
 router.post('/login', function(req, res) {
@@ -47,7 +51,8 @@ router.post('/register', function(req, res) {
       .catch(err => res.status(400).send({ message: err }));
 });
 
-router.delete('/:id', function(req, res) {
+router.delete('/:id', authenticateJWT, function(req, res) {
+
     usersProcess.remove(req.params.id)
     .then(ret => {
         if(ret.value) {

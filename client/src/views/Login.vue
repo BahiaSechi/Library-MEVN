@@ -22,14 +22,14 @@
         ></b-form-input>
       </b-form>
     </div>
-    <b-button type="button" @click="login()" variant="primary">Se connecter</b-button>
+    <b-button type="button" @click="login()" variant="primary">Se connecter</b-button><br>
+    <p style="margin-top: 30px">Pas encore de compte ? <router-link :to="'register'"> Inscrivez-vous</router-link></p>
   </div>
 
 </template>
 
 <script>
 import users from "@/services/users";
-import Vue from "vue";
 
 export default {
   name: "Login",
@@ -41,7 +41,11 @@ export default {
   methods: {
     login() {
       users.login(this.formUser).then((token) => {
-        Vue.prototype.$token = token.data.ret;
+        this.$cookies.set("token", token.data.ret, 1607508596);
+        this.$router.push({
+          path: 'books',
+          force: true
+        })
       }).catch(() => {
         this.$notify({
           group:'actions',

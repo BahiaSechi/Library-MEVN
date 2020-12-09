@@ -10,7 +10,8 @@
         <router-link  class="list-group-item list-group-item-action bg-light" :to="'publishers'">Editeurs</router-link>
         <router-link  class="list-group-item list-group-item-action bg-light" :to="'borrowings'">Emprunts</router-link>
         <router-link  class="list-group-item list-group-item-action bg-light" :to="'users'">Utilisateurs</router-link>
-        <router-link  class="list-group-item list-group-item-action bg-light" :to="'logout'">Déconnexion</router-link>
+        <b-button v-if="this.$cookies.get('token')" type="button" @click="logout()" variant="primary">Déconnexion</b-button>
+        <b-button v-if="!this.$cookies.get('token')" type="button" @click="reload()" variant="primary">Se connecter</b-button>
       </div>
     </div>
     <div id="page-content-wrapper">
@@ -21,10 +22,23 @@
 </template>
 
 <script>
+
 require('@/assets/css/style.css')
 export default {
   name: 'App',
   components: {
+  },
+  methods: {
+    logout() {
+      this.$cookies.remove("token");
+      this.reload()
+    },
+    reload() {
+      this.$router.push({
+        path: 'login',
+        force: true
+      }).catch(() => {})
+    }
   }
 }
 </script>
