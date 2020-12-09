@@ -8,7 +8,7 @@
         <router-link  class="list-group-item list-group-item-action bg-light" :to="'books'">Livres</router-link>
         <router-link  class="list-group-item list-group-item-action bg-light" :to="'authors'">Auteurs</router-link>
         <router-link  class="list-group-item list-group-item-action bg-light" :to="'publishers'">Editeurs</router-link>
-        <router-link  class="list-group-item list-group-item-action bg-light" :to="'borrowings'">Emprunts</router-link>
+        <router-link  class="list-group-item list-group-item-action bg-light" :to="'loans'">Emprunts</router-link>
         <router-link  class="list-group-item list-group-item-action bg-light" :to="'users'">Utilisateurs</router-link>
         <b-button v-if="this.$cookies.get('token')" type="button" @click="logout()" variant="primary">Déconnexion</b-button>
         <b-button v-if="!this.$cookies.get('token')" type="button" @click="reload()" variant="primary">Se connecter</b-button>
