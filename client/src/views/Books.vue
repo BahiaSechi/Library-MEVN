@@ -55,6 +55,7 @@ export default {
             type: 'success',
             position: 'bottom center'
           });
+          this.newBook.title = '';
           this.getAllBooks()
         });
       }
@@ -73,6 +74,17 @@ export default {
   },
   mounted() {
     this.getAllBooks()
+  },
+  created() {
+    if(!this.$cookies.get("token")) {
+      this.$router.push("login");
+      this.$notify({
+        group:'actions',
+        text: '<b>Vous devez vous connecter.</b>',
+        type: 'error',
+        position: 'bottom center'
+      });
+    }
   }
 }
 </script>

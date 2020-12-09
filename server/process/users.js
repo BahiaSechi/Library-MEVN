@@ -1,7 +1,9 @@
+const jwt = require('jsonwebtoken');
 const MongoClient = require('mongodb').MongoClient;
 const url = "mongodb://localhost:27017/";
 const ObjectId = require('mongodb').ObjectID;
 const dbName = "web-services";
+const accessTokenSecret = "web-services-secret"
 let dbClient;
 let collection;
 
@@ -15,14 +17,14 @@ MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, func
 
 const login = function (creds) {
     return new Promise((resolve, reject) => {
-        console.log(creds)
-        let user;
-        collection.find({username: creds.username}).toArray()
+    let user;
+    collection.find({username: creds.username}).toArray()
         .then((userResponse) => { user = userResponse; })
         .then(() => {
             if(user[0] && user[0].username) {
                 if(user[0].password === creds.password) {
-                    resolve();
+                    const accessToken = jwt.sign({username: user[0].username, role: user[0].role}, accessTokenSecret);
+                    resolve(accessToken);
                 } else {
                     reject('Bad credentials.');
                 }
@@ -31,12 +33,11 @@ const login = function (creds) {
             }
         })
         .catch(error => reject(error));
-    })
+    });
 }
 
 const register = function (creds) {
     return new Promise((resolve, reject) => {
-        console.log(creds)
         let user;
         collection.find({username: creds.username}).toArray()
             .then((userResponse) => { user = userResponse; })

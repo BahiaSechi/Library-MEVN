@@ -54,6 +54,7 @@ export default {
             type: 'success',
             position: 'bottom center'
           });
+          this.newAuthor.name = '';
           this.getAllAuthors()
         });
       }
@@ -72,6 +73,17 @@ export default {
   },
   mounted() {
     this.getAllAuthors()
+  },
+  created() {
+    if(!this.$cookies.get("token")) {
+      this.$router.push("login");
+      this.$notify({
+        group:'actions',
+        text: '<b>Vous devez vous connecter.</b>',
+        type: 'error',
+        position: 'bottom center'
+      });
+    }
   }
 }
 </script>
