@@ -56,6 +56,24 @@ const register = function (creds) {
     })
 }
 
+const getById = function(userId){
+    return new Promise((resolve, reject) => {
+        if(userId) {
+            let objId = new ObjectId(userId);
+            collection.findOne({"_id": objId})
+                .then(ret => {
+                    if(ret){
+                        resolve(ret)
+                    } else {
+                        reject("User with id " + id + " does  not exist.");
+                    }
+                })
+        } else {
+            reject("No provided id.");
+        }
+    });
+}
+
 const remove = function(id) {
     return collection.findOneAndDelete({"_id": new ObjectId(id)});
 }
@@ -69,3 +87,4 @@ exports.login = login;
 exports.register = register;
 exports.remove = remove;
 exports.list = list;
+exports.getById = getById;
