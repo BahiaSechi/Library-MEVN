@@ -18,6 +18,12 @@ export default {
         return api().post('users/register', newUser)
     },
 
+    addUser(newUser) {
+        return api().post('users', newUser, {
+            headers: { Authorization: "Bearer " + Vue.$cookies.get("token") }
+        });
+    },
+
     login(user) {
         return api().post('users/login', user)
     },

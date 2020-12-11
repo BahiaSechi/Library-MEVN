@@ -17,7 +17,7 @@
       <b-form style="display: contents" inline>
         <b-form-select style="margin: 20px" v-model="clientSelected" :options="clientOptions"></b-form-select>
         <b-form-select v-model="bookSelected" :options="bookOptions"></b-form-select>
-        <b-form-input style="margin: 20px" v-model="newLoan.title" :placeholder="'Durée de l\'emprunt'" :min="1" :type="'number'"></b-form-input>
+        <b-form-input style="margin: 20px" v-model="durationSelected" :placeholder="'Durée de l\'emprunt'" :min="1" :type="'number'"></b-form-input>
       </b-form>
     </div>
     <p style="margin: 20px">Note: La durée de l'emprunt est exprimée en jours. Si aucune valeur n'est définie, l'emprunt sera de 15 jours par défaut.</p>
@@ -37,10 +37,11 @@ export default {
       loans_fields: ['nomClient', 'bookId', 'dateEmprunt', 'dateRetour',  'actions'],
       bookOptions: [{ value: null, text: 'Choisissez le livre' }],
       clientOptions: [{ value: null, text: 'Choisissez l\'utilisateur' }],
-      newLoan: {name:""},
+      newLoan: {clientId:"", bookId:"", duration:""},
       apiResponse: null,
       bookSelected: null,
-      clientSelected: null
+      clientSelected: null,
+      durationSelected: null
     }
   },
 
@@ -71,14 +72,18 @@ export default {
     validateLoan() {
     },
     addLoan(){
-      if(this.newLoan.name === '') {
+      if(!this.clientSelected || !this.bookSelected) {
         this.$notify({
           group:'actions',
-          text: `<b>Il faut renseigner au moins un nom d'auteur. </b>`,
+          text: `<b>Il faut renseigner au moins un livre et un utilisateur. </b>`,
           type: 'error',
           position: 'bottom center'
         });
       } else {
+        this.newLoan.clientId = this.clientSelected;
+        this.newLoan.bookId = this.bookSelected;
+        const daysInHours = parseInt(this.durationSelected) * 24;
+        this.newLoan.duration = "PT" + daysInHours + "H"
         loans.add(this.newLoan).then(() => {
           this.$notify({
             group: 'actions',

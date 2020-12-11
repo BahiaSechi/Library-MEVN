@@ -60,23 +60,26 @@ export default {
           position: 'bottom center'
         });
       } else {
-        users.register(this.newUser).then(() => {
-          this.$notify({
-            group:'actions',
-            text: '<b>Utilisateur bien inscrit !</b>',
-            type: 'success',
-            position: 'bottom center'
+        this.newUser.role = this.roleSelected;
+        if(this.newUser.role) {
+          users.addUser(this.newUser).then(() => {
+            this.$notify({
+              group:'actions',
+              text: '<b>Utilisateur bien inscrit !</b>',
+              type: 'success',
+              position: 'bottom center'
+            });
+            this.newUser.username = this.newUser.password = '';
+            this.getAllUsers();
+          }).catch(() => {
+            this.$notify({
+              group:'actions',
+              text: "<b>Impossible de créer l'utilisateur</b>",
+              type: 'error',
+              position: 'bottom center'
+            });
           });
-          this.newUser.username = this.newUser.password = '';
-          this.getAllUsers();
-        }).catch(() => {
-          this.$notify({
-            group:'actions',
-            text: `<b>Le compte existe déjà. </b>`,
-            type: 'error',
-            position: 'bottom center'
-          });
-        });
+        }
       }
     },
     deleteUser(userId){

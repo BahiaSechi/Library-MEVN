@@ -62,7 +62,7 @@ const add = function (creds, loggedUser) {
                 .then((userResponse) => { user = userResponse; })
                 .then(() => {
                     if(user[0] && user[0].username) {
-                        reject('This account already exists.');
+                        reject({ message:"Ce compte existe déjà."});
                     } else if (creds.password.length < 8) {
                         reject('Your password needs to have at least 8 characters.');
                     }
@@ -78,7 +78,7 @@ const add = function (creds, loggedUser) {
                     }
                 });
         } else {
-            reject("401 : Unauthorized");
+            reject({ message:"Vous n'avez pas la permission de créer cet utilisateur."});
         }
     })
 }
@@ -91,7 +91,7 @@ const register = function (creds) {
             .then((userResponse) => { user = userResponse; })
             .then(() => {
                 if(user[0] && user[0].username) {
-                    reject('This account already exists.');
+                    reject({ message:"Ce compte existe déjà."});
                 } else {
                     const newUser = {
                         username: creds.username,
@@ -113,7 +113,7 @@ const getById = function(userId){
                     if(ret){
                         resolve(ret)
                     } else {
-                        reject("User with id " + id + " does  not exist.");
+                        reject("User with id " + userId + " does  not exist.");
                     }
                 })
         } else {
