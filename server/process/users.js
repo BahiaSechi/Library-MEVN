@@ -36,6 +36,54 @@ const login = function (creds) {
     });
 }
 
+const add = function (creds, loggedUser) {
+    return new Promise((resolve, reject) => {
+        const role = loggedUser.role;
+        let user;
+
+        let canCreate = false;
+
+        switch (role) {
+            case "ADMINISTRATOR_ROLE":
+                canCreate = (creds.role === "CONTRIBUTOR_ROLE" || creds.role === "BORROW_ROLE" || creds.role === "CONSULT_ROLE");
+                break;
+            case "CONTRIBUTOR_ROLE":
+                canCreate = (creds.role === "BORROW_ROLE" || creds.role === "CONSULT_ROLE");
+                break;
+            case "BORROW_ROLE":
+                canCreate = (creds.role === "CONSULT_ROLE");
+                break;
+            default:
+                return false;
+        }
+
+        if (canCreate) {
+            collection.find({username: creds.username}).toArray()
+                .then((userResponse) => { user = userResponse; })
+                .then(() => {
+                    if(user[0] && user[0].username) {
+                        reject('This account already exists.');
+                    } else if (creds.password.length < 8) {
+                        reject('Your password needs to have at least 8 characters.');
+                    }
+                    else {
+                        const newUser = {
+                            username: creds.username,
+                            password: creds.password,
+                            role: creds.role
+                        };
+                        collection.insertOne(newUser).then(() => {
+                            resolve();
+                        }).catch(error => reject(error));
+                    }
+                });
+        } else {
+            reject("401 : Unauthorized");
+        }
+    })
+}
+
+
 const register = function (creds) {
     return new Promise((resolve, reject) => {
         let user;
@@ -88,3 +136,4 @@ exports.register = register;
 exports.remove = remove;
 exports.list = list;
 exports.getById = getById;
+exports.add = add;

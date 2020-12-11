@@ -14,6 +14,7 @@
       <b-form style="display: contents" inline>
         <b-form-input style="margin: 20px" v-model="newUser.username" :placeholder="'Email ou pseudo'" :type="'text'"></b-form-input>
         <b-form-input style="margin: 20px" v-model="newUser.password" :placeholder="'Mot de passe'" :type="'password'"></b-form-input>
+        <b-form-select style="margin: 20px" v-model="roleSelected" :options="rolesOptions"></b-form-select>
       </b-form>
     </div>
     <b-button variant="outline-primary" @click="addUser()">Inscrire l'utilisateur</b-button>
@@ -30,8 +31,11 @@ export default {
   data() {
     return {
       users_fields: ['username', 'actions'],
-      newUser: {username:"", password:""},
-      apiResponse: null
+      newUser: {username:"", password:"", role:""},
+      roleSelected: "CONSULT_ROLE",
+      apiResponse: null,
+      rolesOptions: [{value:"CONSULT_ROLE", text:"Utilisateur"}, {value:"BORROW_ROLE", text:"Agent de bilbiothèque"},
+        {value:"CONTRIBUTOR_ROLE", text:"Bibliothécaire"}]
     }
   },
   methods: {

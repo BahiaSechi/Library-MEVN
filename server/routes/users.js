@@ -39,6 +39,12 @@ router.get('/', authenticateJWT, (req, res) => {
    }
 });
 
+router.post('/', authenticateJWT, function(req, res) {
+    usersProcess.add(req.body, req["user"])
+        .then(ret => res.status(201).send(ret))
+        .catch(err => res.status(400).send({ message: err }));
+});
+
 router.get('/:id', authenticateJWT, (req, res) => {
     if(req['user'].role !== 'CONSULT_ROLE') {
         usersProcess.getById(req.params.id)
@@ -57,6 +63,7 @@ router.post('/login', function(req, res) {
   usersProcess.login(req.body)
       .then(ret => res.status(200).json({ ret }))
       .catch(err => res.status(401).send({ message: err }));
+    console.log(req.body);
 });
 
 router.post('/register', function(req, res) {
