@@ -23,26 +23,48 @@ const authenticateJWT = (req, res, next) => {
     }
 }
 
-
 /* GET loans listing.*/
-router.get('/', (req, res) => {
+router.get('/', authenticateJWT,(req, res) => {
+    if (req['user'].role !== 'CONSULT_ROLE') {
     loansProcess.getAll()
         .then(response => res.status(response.status).send(response.data))
         .catch(err => res.status(err.response.status).send({ message: err.message }));
+    } else {
+        res.status(401).send("Unauthorized");
+    }
+});
+
+/* GET loans listing.*/
+router.get('/:id/return', authenticateJWT, (req, res) => {
+    if (req['user'].role !== 'CONSULT_ROLE') {
+        loansProcess.getAll()
+            .then(response => res.status(response.status).send(response.data))
+            .catch(err => res.status(err.response.status).send({ message: err.message }));
+    } else {
+        res.status(401).send("Unauthorized");
+    }
 });
 
 /* Create a new loan. */
-router.post('/', function(req, res) {
-    loansProcess.add(req.body)
-        .then(response => res.status(response.status).send(response.data))
-        .catch(err => res.status(err.response.status).send({message: err.message}));
+router.post('/', authenticateJWT, function(req, res) {
+    if (req['user'].role !== 'CONSULT_ROLE') {
+        loansProcess.add(req.body)
+            .then(response => res.status(response.status).send(response.data))
+            .catch(err => res.status(err.response.status).send({message: err.message}));
+    } else {
+        res.status(401).send("Unauthorized");
+    }
 });
 
 /* DELETE an loan by id.*/
-router.delete('/:id', function (req,res) {
-    loansProcess.remove(req.params.id)
-        .then(response => res.status(response.status).send(response.data))
-        .catch(err => res.status(err.response.status).send({message: err.message}));
+router.delete('/:id', authenticateJWT, function (req,res) {
+    if (req['user'].role !== 'ADMINISTRATOR_ROLE') {
+        loansProcess.remove(req.params.id)
+            .then(response => res.status(response.status).send(response.data))
+            .catch(err => res.status(err.response.status).send({message: err.message}));
+    } else {
+        res.status(401).send("Unauthorized");
+    }
 });
 
 module.exports = router;

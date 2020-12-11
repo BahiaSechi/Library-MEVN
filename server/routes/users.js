@@ -24,8 +24,8 @@ const authenticateJWT = (req, res, next) => {
 }
 
 /* GET users listing. */
-router.get('/',(req, res) => {
-  //if(req['user'].role !== 'CONSULT_ROLE'){
+router.get('/', authenticateJWT, (req, res) => {
+  if(req['user'].role !== 'CONSULT_ROLE'){
       usersProcess.list()
       .then((ret) => {
           ret.forEach(user => delete user.password);
@@ -34,19 +34,23 @@ router.get('/',(req, res) => {
       .then((retWithoutPwd) => {
           res.send(retWithoutPwd)
       })
-  //} else {
-  //     res.status(401).send("Unauthorized");
-  // }
+  } else {
+       res.status(401).send("Unauthorized");
+   }
 });
 
-router.get('/:id', (req, res) => {
-    usersProcess.getById(req.params.id)
-        .then((ret) => {
-            ret.forEach(user => delete user.password);
-            return ret;
-        }).then((retWithoutPwd) => {
+router.get('/:id', authenticateJWT, (req, res) => {
+    if(req['user'].role !== 'CONSULT_ROLE') {
+        usersProcess.getById(req.params.id)
+            .then((ret) => {
+                ret.forEach(user => delete user.password);
+                return ret;
+            }).then((retWithoutPwd) => {
             res.status(200).send(retWithoutPwd)
-        }).catch(err => res.status(400).send({ message: err }));
+        }).catch(err => res.status(400).send({message: err}));
+    } else {
+        res.status(401).send("Unauthorized");
+    }
 });
 
 router.post('/login', function(req, res) {
@@ -62,16 +66,19 @@ router.post('/register', function(req, res) {
 });
 
 router.delete('/:id', authenticateJWT, function(req, res) {
-
-    usersProcess.remove(req.params.id)
-    .then(ret => {
-        if(ret.value) {
-            res.status(200).send(ret)
-        } else {
-            res.status(404).send({message: "User not found."})
-        }
-    })
-    .catch(err => res.status(400).send({message: err}));
+    if(req['user'].role === 'ADMINISTRATOR_ROLE') {
+        usersProcess.remove(req.params.id)
+            .then(ret => {
+                if (ret.value) {
+                    res.status(200).send(ret)
+                } else {
+                    res.status(404).send({message: "User not found."})
+                }
+            })
+            .catch(err => res.status(400).send({message: err}));
+    } else {
+        res.status(401).send("Unauthorized");
+    }
 });
 
 module.exports = router;
