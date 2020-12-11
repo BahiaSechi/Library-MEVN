@@ -9,6 +9,12 @@ export default {
         });
     },
 
+    getById(bookId) {
+        return api().get(`books/${bookId}`, {
+            headers: {Authorization: "Bearer " + Vue.$cookies.get("token")}
+        });
+    },
+
     add(newBook) {
         return api().post('books', newBook, {
             headers: { Authorization: "Bearer " + Vue.$cookies.get("token") }

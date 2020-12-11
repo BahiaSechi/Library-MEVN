@@ -34,11 +34,11 @@ export default {
   name: 'Loans',
   data() {
     return {
-      loans_fields: ['nomClient', 'bookId', 'dateEmprunt', 'dateRetour',  'actions'],
+      loans_fields: ['nomClient', 'titreLivre', 'dateEmprunt', 'dateRetour',  'actions'],
       bookOptions: [{ value: null, text: 'Choisissez le livre' }],
       clientOptions: [{ value: null, text: 'Choisissez l\'utilisateur' }],
       newLoan: {clientId:"", bookId:"", duration:""},
-      apiResponse: null,
+      apiResponse: [],
       bookSelected: null,
       clientSelected: null,
       durationSelected: null
@@ -53,19 +53,26 @@ export default {
       }).then((response) => {
         response.data.forEach((loan) => {
           promises.push(
-            users.getById(loan.clientId).then((user) => {
-              loan.nomClient = user.data.username;
-              loan.dateEmprunt = loan['startDatetime'].split('T')[0];
-              loan.dateRetour = loan['endDatetime'].split('T')[0];
-              return loan;
-            }));
+              books.getById(loan.bookId).then((book) => {
+                loan.titreLivre = book.data.title;
+                loan.dateEmprunt = loan['startDatetime'].split('T')[0];
+                loan.dateRetour = loan['endDatetime'].split('T')[0];
+                return loan;
+              }).then((loan) => {
+                users.getById(loan.clientId).then((user) => {
+                  loan.nomClient = user.data.username
+                  this.apiResponse.push(loan);
+                  return loan;
+                })
+              })
+          );
         });
-        Promise.all(promises).then(loans => this.apiResponse = loans);
+      Promise.all(promises);
       }).then(() => {
         users.getAll().then((response) => {response.data.map((user) => this.clientOptions.push({value:user._id, text:user.username})
         )}
       )}).then(() => {
-        books.getAll().then((response) => {response.data.map((book) => this.bookOptions.push({value:book.publisherId, text:book.title})
+        books.getAll().then((response) => {response.data.map((book) => this.bookOptions.push({value:book.id, text:book.title})
             )}
       )}).catch((err) => console.log(err));
     },

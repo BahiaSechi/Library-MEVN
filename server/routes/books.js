@@ -28,7 +28,12 @@ router.get('/', authenticateJWT,(req, res) => {
         booksProcess.getAll()
             .then(response => res.status(response.status).send(response.data))
             .catch(err => res.status(err.response.status).send({message: err.message}));
+});
 
+router.get('/:id', authenticateJWT, (req, res) => {
+    booksProcess.getById(req.params.id)
+        .then(ret => res.status(ret.status).send(ret.data))
+        .catch(err => {console.log(err); res.status(400).send({message: err})});
 });
 
 /* Create a new book. */
