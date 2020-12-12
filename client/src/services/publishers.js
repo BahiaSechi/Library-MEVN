@@ -9,6 +9,12 @@ export default {
         });
     },
 
+    getById(publisherId) {
+        return api().get(`publishers/${publisherId}`, {
+            headers: {Authorization: "Bearer " + Vue.$cookies.get("token")}
+        });
+    },
+
     add(newPublisher) {
         return api().post('publishers', newPublisher, {
             headers: { Authorization: "Bearer " + Vue.$cookies.get("token") }

@@ -35,9 +35,9 @@ router.get('/', authenticateJWT,(req, res) => {
 });
 
 /* GET loans listing.*/
-router.get('/:id/return', authenticateJWT, (req, res) => {
+router.post('/:id/return', authenticateJWT, (req, res) => {
     if (req['user'].role !== 'CONSULT_ROLE') {
-        loansProcess.getAll()
+        loansProcess.returnLoan(req.params.id)
             .then(response => res.status(response.status).send(response.data))
             .catch(err => res.status(err.response.status).send({ message: err.message }));
     } else {
@@ -58,7 +58,7 @@ router.post('/', authenticateJWT, function(req, res) {
 
 /* DELETE an loan by id.*/
 router.delete('/:id', authenticateJWT, function (req,res) {
-    if (req['user'].role !== 'ADMINISTRATOR_ROLE') {
+    if (req['user'].role === 'ADMINISTRATOR_ROLE') {
         loansProcess.remove(req.params.id)
             .then(response => res.status(response.status).send(response.data))
             .catch(err => res.status(err.response.status).send({message: err.message}));

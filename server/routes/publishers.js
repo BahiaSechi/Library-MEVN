@@ -34,6 +34,12 @@ router.get('/', authenticateJWT,function(req, res) {
     }
 });
 
+router.get('/:id', authenticateJWT, (req, res) => {
+    publishersProcess.getById(req.params.id)
+        .then(response => res.status(response.status).send(response.data))
+        .catch(err => res.status(err.response.status).send({message: err.message}));
+});
+
 /* Create a new publisher. */
 router.post('/', authenticateJWT, function(req, res) {
     if(req['user'].role === 'CONTRIBUTOR_ROLE' || req['user'].role === 'ADMINISTRATOR_ROLE') {

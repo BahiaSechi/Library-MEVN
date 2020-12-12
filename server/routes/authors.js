@@ -35,6 +35,12 @@ router.get('/',authenticateJWT, (req, res) => {
     }
 });
 
+router.get('/:id', authenticateJWT, (req, res) => {
+        authorsProcess.getById(req.params.id)
+            .then(response => res.status(response.status).send(response.data))
+            .catch(err => res.status(err.response.status).send({message: err.message}));
+});
+
 /* Create a new author. */
 router.post('/',authenticateJWT, function(req, res) {
     if(req['user'].role !== 'CONSULT_ROLE') {

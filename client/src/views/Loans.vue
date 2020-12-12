@@ -4,7 +4,7 @@
     <div style="margin-top: 50px">
       <b-table :items="apiResponse" :fields="loans_fields" striped hover>
         <template #cell(actions)="row">
-          <b-button variant="success" size="sm" @click="validateLoan(row.item.id)" class="mr-2" data-toggle="tooltip" data-placement="top" title="Valider le retour du livre">
+          <b-button variant="success" size="sm" @click="returnLoan(row.item.id)" class="mr-2" data-toggle="tooltip" data-placement="top" title="Valider le retour du livre">
             <b-icon icon="check-circle-fill" aria-hidden="true"></b-icon>
           </b-button>
           <b-button variant="danger" size="sm" @click="deleteLoan(row.item.id)" class="mr-2">
@@ -35,8 +35,8 @@ export default {
   data() {
     return {
       loans_fields: ['nomClient', 'titreLivre', 'dateEmprunt', 'dateRetour',  'actions'],
-      bookOptions: [{ value: null, text: 'Choisissez le livre' }],
-      clientOptions: [{ value: null, text: 'Choisissez l\'utilisateur' }],
+      bookOptions: [{ value: null, text: 'Choisissez le livre', disabled: true}],
+      clientOptions: [{ value: null, text: 'Choisissez l\'utilisateur', disabled: true }],
       newLoan: {clientId:"", bookId:"", duration:""},
       apiResponse: [],
       bookSelected: null,
@@ -47,6 +47,8 @@ export default {
 
   methods: {
     getAllLoans() {
+      this.bookOptions = [{ value: null, text: 'Choisissez le livre', disabled: true}];
+      this.clientOptions = [{ value: null, text: 'Choisissez l\'utilisateur', disabled: true }];
       const promises = [];
       loans.getAll().then(response => {
         return response;
@@ -72,11 +74,23 @@ export default {
         users.getAll().then((response) => {response.data.map((user) => this.clientOptions.push({value:user._id, text:user.username})
         )}
       )}).then(() => {
-        books.getAll().then((response) => {response.data.map((book) => this.bookOptions.push({value:book.id, text:book.title})
-            )}
+        books.getAll().then((response) => {response.data.map((book) => {
+          if(book.state === "AVAILABLE"){
+            this.bookOptions.push({value:book.id, text:book.title})}
+          }
+        )}
       )}).catch((err) => console.log(err));
     },
-    validateLoan() {
+    returnLoan(loanId) {
+      loans.return(loanId).then(() => {
+        this.$notify({
+          group:'actions',
+          text: '<b>Emprunt archivé!</b>',
+          type: 'success',
+          position: 'bottom center'
+        });
+        window.location.reload();
+      });
     },
     addLoan(){
       if(!this.clientSelected || !this.bookSelected) {
@@ -89,18 +103,18 @@ export default {
       } else {
         this.newLoan.clientId = this.clientSelected;
         this.newLoan.bookId = this.bookSelected;
-        const daysInHours = parseInt(this.durationSelected) * 24;
+        const daysInHours = this.durationSelected ? parseInt(this.durationSelected) * 24 : 360;
         this.newLoan.duration = "PT" + daysInHours + "H"
         loans.add(this.newLoan).then(() => {
           this.$notify({
             group: 'actions',
-            text: '<b>Auteur bien ajouté !</b>',
+            text: '<b>Emprunt bien ajouté !</b>',
             type: 'success',
             position: 'bottom center'
           });
           this.newLoan.name = '';
-          this.getAllLoans()
-        });
+          window.location.reload();
+        })
       }
     },
     deleteLoan(loanId){
@@ -111,7 +125,7 @@ export default {
           type: 'success',
           position: 'bottom center'
         });
-        this.getAllLoans()
+        window.location.reload();
       });
     }
   },

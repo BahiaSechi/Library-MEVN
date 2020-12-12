@@ -8,8 +8,14 @@ export default {
             headers: { Authorization: "Bearer " + Vue.$cookies.get("token") }
         });
     },
-    add(newBook) {
-        return api().post('loans', newBook, {
+    add(newLoan) {
+        return api().post('loans', newLoan, {
+            headers: { Authorization: "Bearer " + Vue.$cookies.get("token") }
+        })
+    },
+
+    return(id) {
+        return api().post(`loans/${id}/return`, {},  {
             headers: { Authorization: "Bearer " + Vue.$cookies.get("token") }
         })
     },
