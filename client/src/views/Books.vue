@@ -60,7 +60,6 @@ export default {
         })
         Promise.all(promises).then(() => {response.data.map((book) => {
           publishers.getById(book.publisherId).then((publisher) => {
-            console.log("hello")
             book.editeur = publisher.data.name;
             book.auteurs = book.auteurs.join(', ')}); this.apiResponse = response.data;
           })

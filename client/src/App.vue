@@ -7,11 +7,13 @@
       <div class="list-group list-group-flush">
         <router-link  v-if="this.$cookies.get('token')" class="list-group-item list-group-item-action bg-light" :to="'books'">Livres</router-link>
         <router-link  v-if="this.$cookies.get('token') && this.$cookies.get('role') !== 'CONSULT_ROLE'" class="list-group-item list-group-item-action bg-light" :to="'authors'">Auteurs</router-link>
-        <router-link  v-if="this.$cookies.get('token') && this.$cookies.get('role') !== 'CONSULT_ROLE'" class="list-group-item list-group-item-action bg-light" :to="'users'">Utilisateurs</router-link>
         <router-link  v-if="this.$cookies.get('token') && this.$cookies.get('role') !== 'CONSULT_ROLE'" class="list-group-item list-group-item-action bg-light" :to="'publishers'">Editeurs</router-link>
         <router-link  v-if="this.$cookies.get('token') && this.$cookies.get('role') !== 'CONSULT_ROLE'" class="list-group-item list-group-item-action bg-light" :to="'loans'">Emprunts</router-link>
+        <router-link  v-if="this.$cookies.get('token') && this.$cookies.get('role') !== 'CONSULT_ROLE'" class="list-group-item list-group-item-action bg-light" :to="'users'">Utilisateurs</router-link>
         <b-button v-if="this.$cookies.get('token')" type="button" @click="logout()" variant="primary">Déconnexion</b-button>
         <b-button v-if="!this.$cookies.get('token')" type="button" @click="reload()" variant="primary">Se connecter</b-button>
+        <div class="list-group-item list-group-item-action bg-light" v-if="this.$cookies.get('token')">Connecté en tant que : {{this.$cookies.get('username')}}</div>
+        <div class="list-group-item list-group-item-action bg-light" v-if="this.$cookies.get('token')">Role associé : {{this.$cookies.get('role')}}</div>
       </div>
     </div>
     <div id="page-content-wrapper">
