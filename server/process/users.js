@@ -24,7 +24,7 @@ const login = function (creds) {
             if(user[0] && user[0].username) {
                 if(user[0].password === creds.password) {
                     const accessToken = jwt.sign({username: user[0].username, role: user[0].role}, accessTokenSecret);
-                    resolve(accessToken);
+                    resolve({token: accessToken, role: user[0].role, username: user[0].username});
                 } else {
                     reject('Bad credentials.');
                 }
@@ -36,6 +36,54 @@ const login = function (creds) {
     });
 }
 
+const add = function (creds, loggedUser) {
+    return new Promise((resolve, reject) => {
+        const role = loggedUser.role;
+        let user;
+
+        let canCreate = false;
+
+        switch (role) {
+            case "ADMINISTRATOR_ROLE":
+                canCreate = (creds.role === "CONTRIBUTOR_ROLE" || creds.role === "BORROW_ROLE" || creds.role === "CONSULT_ROLE");
+                break;
+            case "CONTRIBUTOR_ROLE":
+                canCreate = (creds.role === "BORROW_ROLE" || creds.role === "CONSULT_ROLE");
+                break;
+            case "BORROW_ROLE":
+                canCreate = (creds.role === "CONSULT_ROLE");
+                break;
+            default:
+                return false;
+        }
+
+        if (canCreate) {
+            collection.find({username: creds.username}).toArray()
+                .then((userResponse) => { user = userResponse; })
+                .then(() => {
+                    if(user[0] && user[0].username) {
+                        reject({ message:"Ce compte existe déjà."});
+                    } else if (creds.password.length < 8) {
+                        reject('Your password needs to have at least 8 characters.');
+                    }
+                    else {
+                        const newUser = {
+                            username: creds.username,
+                            password: creds.password,
+                            role: creds.role
+                        };
+                        collection.insertOne(newUser).then(() => {
+                            resolve();
+                        }).catch(error => reject(error));
+                    }
+                });
+        } else {
+            reject({ message:"Vous n'avez pas la permission de créer cet utilisateur."});
+        }
+    })
+}
+
+
 const register = function (creds) {
     return new Promise((resolve, reject) => {
         let user;
@@ -43,7 +91,7 @@ const register = function (creds) {
             .then((userResponse) => { user = userResponse; })
             .then(() => {
                 if(user[0] && user[0].username) {
-                    reject('This account already exists.');
+                    reject({ message:"Ce compte existe déjà."});
                 } else {
                     const newUser = {
                         username: creds.username,
@@ -54,6 +102,24 @@ const register = function (creds) {
                 }
             });
     })
+}
+
+const getById = function(userId){
+    return new Promise((resolve, reject) => {
+        if(userId) {
+            let objId = new ObjectId(userId);
+            collection.findOne({"_id": objId})
+                .then(ret => {
+                    if(ret){
+                        resolve(ret)
+                    } else {
+                        reject("User with id " + userId + " does  not exist.");
+                    }
+                })
+        } else {
+            reject("No provided id.");
+        }
+    });
 }
 
 const remove = function(id) {
@@ -69,3 +135,5 @@ exports.login = login;
 exports.register = register;
 exports.remove = remove;
 exports.list = list;
+exports.getById = getById;
+exports.add = add;

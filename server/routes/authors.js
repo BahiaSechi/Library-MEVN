@@ -26,23 +26,41 @@ const authenticateJWT = (req, res, next) => {
 
 /* GET authors listing.*/
 router.get('/',authenticateJWT, (req, res) => {
-    authorsProcess.getAll()
-        .then(response => res.status(response.status).send(response.data))
-        .catch(err => res.status(err.response.status).send({ message: err.message }));
+    if(req['user'].role !== 'CONSULT_ROLE') {
+        authorsProcess.getAll()
+            .then(response => res.status(response.status).send(response.data))
+            .catch(err => res.status(err.response.status).send({message: err.message}));
+    } else {
+        res.status(401).send("Unauthorized");
+    }
+});
+
+router.get('/:id', authenticateJWT, (req, res) => {
+        authorsProcess.getById(req.params.id)
+            .then(response => res.status(response.status).send(response.data))
+            .catch(err => res.status(err.response.status).send({message: err.message}));
 });
 
 /* Create a new author. */
 router.post('/',authenticateJWT, function(req, res) {
-    authorsProcess.add(req.body)
+    if(req['user'].role !== 'CONSULT_ROLE') {
+        authorsProcess.add(req.body)
         .then(response => res.status(response.status).send(response.data))
         .catch(err => res.status(err.response.status).send({message: err.message}));
+    } else {
+        res.status(401).send("Unauthorized");
+    }
 });
 
 /* DELETE an author by id.*/
 router.delete('/:id',authenticateJWT, function (req,res) {
-    authorsProcess.remove(req.params.id)
+    if(req['user'].role === 'ADMINISTRATOR_ROLE') {
+        authorsProcess.remove(req.params.id)
         .then(response => res.status(response.status).send(response.data))
         .catch(err => res.status(err.response.status).send({message: err.message}));
+    } else {
+        res.status(401).send("Unauthorized");
+    }
 });
 
 module.exports = router;

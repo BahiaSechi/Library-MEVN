@@ -4,25 +4,24 @@ import Vue from "vue";
 
 export default {
     getAll() {
-        return api().get('books', {
+        return api().get('loans', {
             headers: { Authorization: "Bearer " + Vue.$cookies.get("token") }
         });
     },
-
-    getById(bookId) {
-        return api().get(`books/${bookId}`, {
-            headers: {Authorization: "Bearer " + Vue.$cookies.get("token")}
-        });
+    add(newLoan) {
+        return api().post('loans', newLoan, {
+            headers: { Authorization: "Bearer " + Vue.$cookies.get("token") }
+        })
     },
 
-    add(newBook) {
-        return api().post('books', newBook, {
+    return(id) {
+        return api().post(`loans/${id}/return`, {},  {
             headers: { Authorization: "Bearer " + Vue.$cookies.get("token") }
         })
     },
 
     remove(id) {
-        return api().delete(`books/${id}`, {
+        return api().delete(`loans/${id}`, {
             headers: { Authorization: "Bearer " + Vue.$cookies.get("token") }
         });
     }

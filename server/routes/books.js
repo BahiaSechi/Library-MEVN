@@ -25,23 +25,37 @@ const authenticateJWT = (req, res, next) => {
 
 /* GET books listing.*/
 router.get('/', authenticateJWT,(req, res) => {
-    booksProcess.getAll()
-        .then(response => res.status(response.status).send(response.data))
-        .catch(err => res.status(err.response.status).send({ message: err.message }));
+        booksProcess.getAll()
+            .then(response => res.status(response.status).send(response.data))
+            .catch(err => res.status(err.response.status).send({message: err.message}));
+});
+
+router.get('/:id', authenticateJWT, (req, res) => {
+    booksProcess.getById(req.params.id)
+        .then(ret => res.status(ret.status).send(ret.data))
+        .catch(err => {console.log(err); res.status(400).send({message: err})});
 });
 
 /* Create a new book. */
 router.post('/',authenticateJWT, function(req, res) {
-    booksProcess.add(req.body)
+    if (req['user'].role === 'CONTRIBUTOR_ROLE' || req['user'].role === 'ADMINISTRATOR_ROLE') {
+        booksProcess.add(req.body)
         .then(response => res.status(response.status).send(response.data))
         .catch(err => res.status(err.response.status).send({message: err.message}));
+    } else {
+        res.status(401).send("Unauthorized");
+    }
 });
 
 /* DELETE a book by id.*/
 router.delete('/:id',authenticateJWT, function (req,res) {
-    booksProcess.remove(req.params.id)
-        .then(response => res.status(response.status).send(response.data))
-        .catch(err => res.status(err.response.status).send({message: err.message}));
+    if (req['user'].role === 'CONTRIBUTOR_ROLE' || req['user'].role === 'ADMINISTRATOR_ROLE') {
+        booksProcess.remove(req.params.id)
+            .then(response => res.status(response.status).send(response.data))
+            .catch(err => res.status(err.response.status).send({message: err.message}));
+    } else {
+        res.status(401).send("Unauthorized");
+    }
 });
 
 module.exports = router;

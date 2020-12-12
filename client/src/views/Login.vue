@@ -41,7 +41,9 @@ export default {
   methods: {
     login() {
       users.login(this.formUser).then((token) => {
-        this.$cookies.set("token", token.data.ret, 1607508596);
+        this.$cookies.set("token", token.data.ret.token, 1607508596);
+        this.$cookies.set("role", token.data.ret.role, 1607508596);
+        this.$cookies.set("username", token.data.ret.username, 1607508596);
         this.$router.push({
           path: 'books',
           force: true

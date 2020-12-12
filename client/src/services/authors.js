@@ -8,6 +8,12 @@ export default {
         });
     },
 
+    getById(authorId) {
+        return api().get(`authors/${authorId}`, {
+            headers: {Authorization: "Bearer " + Vue.$cookies.get("token")}
+        });
+    },
+
     add(newAuthor) {
         return api().post('authors', newAuthor, {
             headers: { Authorization: "Bearer " + Vue.$cookies.get("token") }

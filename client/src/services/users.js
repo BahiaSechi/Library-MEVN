@@ -8,8 +8,20 @@ export default {
         });
     },
 
+    getById(userId) {
+        return api().get(`users/${userId}`, {
+            headers: {Authorization: "Bearer " + Vue.$cookies.get("token")}
+        });
+    },
+
     register(newUser) {
         return api().post('users/register', newUser)
+    },
+
+    addUser(newUser) {
+        return api().post('users', newUser, {
+            headers: { Authorization: "Bearer " + Vue.$cookies.get("token") }
+        });
     },
 
     login(user) {

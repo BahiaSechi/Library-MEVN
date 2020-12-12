@@ -6,6 +6,7 @@ import Books from "@/views/Books";
 import Register from "@/views/Register";
 import Login from "@/views/Login";
 import Home from "@/views/Home";
+import Loans from "@/views/Loans";
 
 export default () => {
     const router = new VueRouter({
@@ -18,6 +19,7 @@ export default () => {
             {path:'/login', component: Login},
             {path:'/register', component: Register},
             {path: '/users', component: Users},
+            {path: '/loans', component: Loans},
             {path: '/books', component: Books}
         ]
     });
