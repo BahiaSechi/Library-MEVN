@@ -131,6 +131,15 @@ export default {
   },
   mounted() {
     this.getAllLoans()
+    if (this.$cookies.get("role") === "CONSULT_ROLE"){
+      this.$router.push("books");
+      this.$notify({
+        group:'actions',
+        text: '<b>Vous n\'avez pas la permission d\'accèder à cette page.</b>',
+        type: 'error',
+        position: 'bottom center'
+      });
+    }
   },
   created() {
     if(!this.$cookies.get("token")) {

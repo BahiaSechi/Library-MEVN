@@ -95,9 +95,6 @@ export default {
     }
   },
   mounted() {
-    this.getAllUsers();
-  },
-  created() {
     if(!this.$cookies.get("token")) {
       this.$router.push("login");
       this.$notify({
@@ -106,6 +103,19 @@ export default {
         type: 'error',
         position: 'bottom center'
       });
+    }
+    if (this.$cookies.get("role") === "CONSULT_ROLE"){
+      this.$router.push("books");
+      this.$notify({
+        group:'actions',
+        text: '<b>Vous n\'avez pas la permission d\'accèder à cette page.</b>',
+        type: 'error',
+        position: 'bottom center'
+      });
+    }
+    this.getAllUsers();
+    if(this.$cookies.get('role') !== 'ADMINISTRATOR_ROLE'){
+      this.users_fields.pop()
     }
   }
 }
