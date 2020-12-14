@@ -10,7 +10,7 @@
         </template>
       </b-table>
     </div>
-    <div style="margin-top: 50px;">
+    <div v-if="this.$cookies.get('role') === 'ADMINISTRATOR_ROLE' || this.$cookies.get('role') === 'CONTRIBUTOR_ROLE'" style="margin-top: 50px;">
       <b-form style="display: contents" inline>
         <b-form-input style="margin: 20px" v-model="newAuthor.name" :placeholder="'Simone de Beauvoir'" :type="'text'"></b-form-input>
         <b-button variant="outline-primary" @click="addAuthor()">Ajouter un auteur</b-button>
@@ -73,6 +73,18 @@ export default {
   },
   mounted() {
     this.getAllAuthors()
+    if (this.$cookies.get("role") === "CONSULT_ROLE"){
+      this.$router.push("books");
+      this.$notify({
+        group:'actions',
+        text: '<b>Vous n\'avez pas la permission d\'accèder à cette page.</b>',
+        type: 'error',
+        position: 'bottom center'
+      });
+    }
+    if(this.$cookies.get('role') === 'CONSULT_ROLE' || this.$cookies.get('role') === 'BORROW_ROLE'){
+      this.author_fields.pop()
+    }
   },
   created() {
     if(!this.$cookies.get("token")) {

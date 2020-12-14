@@ -10,14 +10,15 @@
         </template>
       </b-table>
     </div>
-    <div style="margin-top: 50px;">
+    <div v-if="this.$cookies.get('role') === 'ADMINISTRATOR_ROLE' || this.$cookies.get('role') === 'CONTRIBUTOR_ROLE'" style="margin-top: 50px;">
       <b-form style="display: contents" inline>
         <b-form-select style="margin: 20px" multiple v-model="authorsSelected" :options="authorsOptions"></b-form-select>
         <b-form-select v-model="publisherSelected" :options="publisherOptions"></b-form-select>
         <b-form-input style="margin: 20px" v-model="newBook.title" :placeholder="'Le Petit Prince'"></b-form-input>
       </b-form>
     </div>
-    <b-button variant="outline-primary" @click="addBook()">Ajouter un livre</b-button>
+    <b-button v-if="this.$cookies.get('role') === 'ADMINISTRATOR_ROLE' || this.$cookies.get('role') === 'CONTRIBUTOR_ROLE'"
+      variant="outline-primary" @click="addBook()">Ajouter un livre</b-button>
   </div>
 </template>
 <script>
@@ -56,7 +57,16 @@ export default {
                 })
             );
           });
-          book.state === 'AVAILABLE' ? book.state = 'Disponible' : book.state = "Non disponible"
+          switch (book.state) {
+            case "AVAILABLE":
+              book.state = "Disponible"
+              break;
+            case "BORROWED":
+              book.state = "Emprunté"
+              break;
+            case "UNAVAILABLE":
+              book.state = "Non disponible"
+          }
         })
         Promise.all(promises).then(() => {response.data.map((book) => {
           publishers.getById(book.publisherId).then((publisher) => {
@@ -117,6 +127,9 @@ export default {
   },
   mounted() {
     this.getAllBooks()
+    if(this.$cookies.get('role') === 'CONSULT_ROLE' || this.$cookies.get('role') === 'BORROW_ROLE'){
+      this.book_fields.pop()
+    }
   },
   created() {
     if(!this.$cookies.get("token")) {
