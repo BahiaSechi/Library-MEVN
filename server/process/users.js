@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt')
 const MongoClient = require('mongodb').MongoClient;
 const url = "mongodb://localhost:27017/";
 const ObjectId = require('mongodb').ObjectID;
@@ -22,7 +23,7 @@ const login = function (creds) {
         .then((userResponse) => { user = userResponse; })
         .then(() => {
             if(user[0] && user[0].username) {
-                if(user[0].password === creds.password) {
+                if(bcrypt.compareSync(creds.password, user[0].password)) {
                     const accessToken = jwt.sign({username: user[0].username, role: user[0].role}, accessTokenSecret);
                     resolve({token: accessToken, role: user[0].role, username: user[0].username});
                 } else {
@@ -67,9 +68,10 @@ const add = function (creds, loggedUser) {
                         reject('Your password needs to have at least 8 characters.');
                     }
                     else {
+                        const passwordHash = bcrypt.hashSync(creds.password, 10);
                         const newUser = {
                             username: creds.username,
-                            password: creds.password,
+                            password: passwordHash,
                             role: creds.role
                         };
                         collection.insertOne(newUser).then(() => {
@@ -93,9 +95,10 @@ const register = function (creds) {
                 if(user[0] && user[0].username) {
                     reject({ message:"Ce compte existe déjà."});
                 } else {
+                    const passwordHash = bcrypt.hashSync(creds.password, 10);
                     const newUser = {
                         username: creds.username,
-                        password: creds.password,
+                        password: passwordHash,
                         role: 'CONSULT_ROLE'
                     };
                     collection.insertOne(newUser).then(() => resolve()).catch(error => reject(error));
