@@ -1,11 +1,18 @@
-### Node Express template project
+### Lancement du projet
 
-This project is based on a GitLab [Project Template](https://docs.gitlab.com/ee/gitlab-basics/create-project.html).
+Afin de lancer le projet complet (MongoDB + Vue + Node + Spring Boot),
+il faut lancer les scripts dans l'ordre suivant :
+- prepare_vue_front_end_and_node_backend.sh 
+- start_mongodb.sh 
+- start_spring_boot_backend.sh
+- start_node_backend.sh
+- start_vue_front_end.sh
 
-Improvements can be proposed in the [original project](https://gitlab.com/gitlab-org/project-templates/express).
+Il y a donc 4 terminaux de lancé en parallèle :
+- un pour mongoDB
+- un pour le backend spring boot
+- un pour le backend node
+- un pour le frontend vue
 
-### CI/CD with Auto DevOps
-
-This template is compatible with [Auto DevOps](https://docs.gitlab.com/ee/topics/autodevops/).
-
-If Auto DevOps is not already enabled for this project, you can [turn it on](https://docs.gitlab.com/ee/topics/autodevops/#enabling-auto-devops) in the project settings.
+Le frontend est disponible à l'adresse suivante : https://localhost:443  
+ATTENTION : c'est en httpS. Cependant, le certificat que nous avons mis n'est pas un certificat valide.
